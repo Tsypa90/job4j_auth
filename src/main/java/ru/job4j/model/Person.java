@@ -1,5 +1,6 @@
 package ru.job4j.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -17,3 +18,4 @@ public class Person {
     private String login;
     private String password;
 }
+
