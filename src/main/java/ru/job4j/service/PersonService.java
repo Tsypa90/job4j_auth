@@ -20,7 +20,7 @@ public class PersonService {
     }
 
     public List<Person> findAll() {
-        return (List<Person>) repository.findAll();
+        return repository.findAll();
     }
 
     public Optional<Person> findById(int id) {
