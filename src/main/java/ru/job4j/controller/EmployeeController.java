@@ -11,15 +11,16 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import ru.job4j.model.Employee;
 import ru.job4j.model.Person;
+import ru.job4j.service.EmployeeService;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/employee")
 @RequiredArgsConstructor
 public class EmployeeController {
+    @NonNull
+    private final EmployeeService service;
     @Autowired
     private final RestTemplate rest;
 
@@ -29,28 +30,13 @@ public class EmployeeController {
 
     @GetMapping("/")
     public List<Employee> findAll() {
-        List<Employee> rsl = new ArrayList<>();
-        List<Person> persons = rest.exchange(API,
-                HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<List<Person>>() { }).getBody();
-        rsl.add(Employee.builder()
-                .name("Pavel")
-                .surname("Tsyurupa")
-                .taxIdentifier(123456)
-                .hireDate(new Timestamp(System.currentTimeMillis()))
-                .persons(persons)
-                .of());
+        List<Employee> rsl = service.findAll();
         return rsl;
     }
 
-
     @PostMapping("/")
-    public ResponseEntity<Person> create(@RequestBody Person person) {
-        Person rsl = rest.postForObject(API, person, Person.class);
-        return new ResponseEntity<Person>(
-                rsl, HttpStatus.CREATED
-        );
+    public ResponseEntity<Employee> create(@RequestBody Employee employee) {
+        return new ResponseEntity<Employee>(service.save(employee), HttpStatus.CREATED);
     }
 
     @PutMapping("/")
